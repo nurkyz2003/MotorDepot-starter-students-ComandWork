@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "truckName": "Renault ",
+    "driver": " ",
+    "State": "BASE"
+  },
+  {
+    "id": 2,
+    "truckName": "Volvo   ",
+    "driver": " ",
+    "State": "BASE"
+  },
+  {
+    "id": 3,
+    "truckName": "DAF XT  ",
+    "driver": " ",
+    "State": "BASE"
+  },
+  {
+    "id": 4,
+    "truckName": "Optimus Prime",
+    "driver": " ",
+    "State": "BASE"
+  },
+  {
+    "id": 5,
+    "truckName": "Bumble Bee",
+    "driver": " ",
+    "State": "BASE"
+  }
+]
