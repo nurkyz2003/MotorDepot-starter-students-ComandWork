@@ -11,11 +11,35 @@ import java.util.Random;
 
 import static com.company.Main.*;
 
-public class ServiceImpl implements Service{
-    List<Truck> trucks = new ArrayList<>(List.of(GSON.fromJson(readTtuck(), Truck[].class)));
-    List<Driver> drivers = new ArrayList<>(List.of(GSON.fromJson(readDriver(),Driver[].class)));
+public class ServiceImpl implements Service {
+    List<Truck> trucks = new ArrayList<>(List.of(GSON.fromJson(readTruck(), Truck[].class)));
+    List<Driver> drivers = new ArrayList<>(List.of(GSON.fromJson(readDriver(), Driver[].class)));
     List<Truck> truckList = new ArrayList<>(trucks);
     List<Driver> driverList = new ArrayList<>(drivers);
+
+    public void setTrucks(List<Truck> trucks) {
+        this.trucks = trucks;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
+    }
+
+    public List<Truck> getTruckList() {
+        return truckList;
+    }
+
+    public void setTruckList(List<Truck> truckList) {
+        this.truckList = truckList;
+    }
+
+    public List<Driver> getDriverList() {
+        return driverList;
+    }
+
+    public void setDriverList(List<Driver> driverList) {
+        this.driverList = driverList;
+    }
 
     public List<Truck> getTrucks() {
         return trucks;
@@ -24,6 +48,7 @@ public class ServiceImpl implements Service{
     public List<Driver> getDrivers() {
         return drivers;
     }
+
     public Truck findTruckById(int truckId) {
         Truck truck = truckList.stream().filter(x -> x.getId() == truckId).findAny().orElse(null);
         if (truck == null) {
@@ -57,11 +82,11 @@ public class ServiceImpl implements Service{
                 driver.setTruckName(truck.getTruckName());
                 if (truck.getDriver() != null) {
                     String oldDriversName = truck.getDriver();
-                    drivers.stream().filter(x -> x.getName().equals(oldDriversName)).findAny().get().setTruckName("");
+                    getDriverList().stream().filter(x -> x.getName().equals(oldDriversName)).findAny().get().setTruckName("");
                 }
                 truck.setDriver(driver.getName());
                 System.out.println(truck.getTruckName() + "'s truck is now drive " + driver.getName());
-            }else if (truck.getState() == State.REPAIR) {
+            } else if (truck.getState() == State.REPAIR) {
                 System.out.println("We can't change driver,because driver on Repair!!!");
             }
         } else if (truck.getState() == State.ROUTE) {
@@ -99,6 +124,34 @@ public class ServiceImpl implements Service{
 
     @Override
     public void changeTruckState() {
+        System.out.println("Enter the truck id");
+        int id = scannerN.nextInt();
+        Truck truck = findTruckById(id);
+        System.out.println("Which state do you wanna give, choose one of them:\n" +
+                "1) Base" +
+                "2) Route\n" +
+                "3)Repair\n");
+        int state = scannerN.nextInt();
+        if (state == 1) {
+            if (truck.getState() != State.BASE)
+                truck.setState(State.BASE);
+        } else if (truck.getState() == null) {
+            truck.setState(State.BASE);
+        } else System.out.println("Your truck already on base");
+        if (state == 2) {
+            if (truck.getState() != State.ROUTE)
+                truck.setState(State.ROUTE);
+            else if (truck.getState() == null) {
+                truck.setState(State.ROUTE);
+            } else System.out.println("Your truck already on route");
+
+        } else if (state == 3) {
+            if (truck.getState() != State.REPAIR)
+                truck.setState(State.REPAIR);
+            else if (truck.getState() == null) {
+                truck.setState(State.REPAIR);
+            } else System.out.println("Your truck already on repair");
+        }
 
     }
 }

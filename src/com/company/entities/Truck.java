@@ -49,8 +49,15 @@ public class Truck {
 
     @Override
     public String toString() {
-        return id + "  |" + truckName + "     |" + State + "      |" + driver;
+//        return id + "  |" + truckName + "     |" + State + "      |" + driver;
+        String s1 = String.format("%-5s|", id);
+        String s2 = String.format("%-14s|", truckName);
+        String s3 = String.format("%-13s|", State);
+        String s4 = String.format("%-20s", driver);
+        return s1 + s2 + s3 + s4;
     }
-
 }
+
+
+
 
