@@ -38,6 +38,10 @@ public class Driver {
     }
     @Override
     public String toString() {
-        return idDiver + "  |" + name + "             |" + truckName;
+//         idDiver + "    |" + name + "               |" + truckName;
+        String s1 = String.format("%-5s|", idDiver);
+        String s2 = String.format("%-14s|", name);
+        String s3 = String.format("%-13s|", truckName);
+        return s1+s2+s3;
     }
 }

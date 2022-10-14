@@ -54,7 +54,7 @@ public class Truck {
         String s2 = String.format("%-14s|", truckName);
         String s3 = String.format("%-13s|", State);
         String s4 = String.format("%-20s", driver);
-        return s1 + s2 + s3 + s4;
+        return s1 + s2 +  s3 + s4;
     }
 }
 

@@ -14,33 +14,6 @@ import static com.company.Main.*;
 public class ServiceImpl implements Service {
     List<Truck> trucks = new ArrayList<>(List.of(GSON.fromJson(readTruck(), Truck[].class)));
     List<Driver> drivers = new ArrayList<>(List.of(GSON.fromJson(readDriver(), Driver[].class)));
-    List<Truck> truckList = new ArrayList<>(trucks);
-    List<Driver> driverList = new ArrayList<>(drivers);
-
-    public void setTrucks(List<Truck> trucks) {
-        this.trucks = trucks;
-    }
-
-    public void setDrivers(List<Driver> drivers) {
-        this.drivers = drivers;
-    }
-
-    public List<Truck> getTruckList() {
-        return truckList;
-    }
-
-    public void setTruckList(List<Truck> truckList) {
-        this.truckList = truckList;
-    }
-
-    public List<Driver> getDriverList() {
-        return driverList;
-    }
-
-    public void setDriverList(List<Driver> driverList) {
-        this.driverList = driverList;
-    }
-
     public List<Truck> getTrucks() {
         return trucks;
     }
@@ -50,7 +23,7 @@ public class ServiceImpl implements Service {
     }
 
     public Truck findTruckById(int truckId) {
-        Truck truck = truckList.stream().filter(x -> x.getId() == truckId).findAny().orElse(null);
+        Truck truck = trucks.stream().filter(x -> x.getId() == truckId).findAny().orElse(null);
         if (truck == null) {
             try {
                 throw new Exception("We don't found this truck!!!");
@@ -61,20 +34,30 @@ public class ServiceImpl implements Service {
         return truck;
     }
 
-    public Driver findDriver() {
-        Driver driverFree = driverList.stream().filter(x -> x.getTruckName().equals("")).findFirst().orElse(null);
-        if (driverFree == null) {
-            try {
-                throw new Exception("We can't find free drivers!!!");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+    public Driver findDriver(){
+//        Driver driver = getDriverList().stream().filter(x->x.getIdDiver() == id).findFirst().orElse(null);
+        Driver driverFree = null;
+        try {
+            driverFree = getDrivers().stream().filter(x -> x.getTruckName().equals("")).findFirst().orElseThrow();
+            if (driverFree == null) {
+                try {
+                    throw new Exception("We can't find free drivers!!!");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
+            ;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return driverFree;
     }
 
+
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
-    public void changeDriver(int truckId) {
+    public void changeDriver(int truckId) throws Exception {
         Truck truck = findTruckById(truckId);
         Driver driver = findDriver();
         if (truck.getState() == State.BASE) {
@@ -82,7 +65,8 @@ public class ServiceImpl implements Service {
                 driver.setTruckName(truck.getTruckName());
                 if (truck.getDriver() != null) {
                     String oldDriversName = truck.getDriver();
-                    getDriverList().stream().filter(x -> x.getName().equals(oldDriversName)).findAny().get().setTruckName("");
+                    getDrivers().stream().filter(x -> x.getName().equals(oldDriversName)).findFirst();
+                    truck.setDriver(driver.getName());
                 }
                 truck.setDriver(driver.getName());
                 System.out.println(truck.getTruckName() + "'s truck is now drive " + driver.getName());
@@ -119,7 +103,26 @@ public class ServiceImpl implements Service {
 
     @Override
     public void startRepair(int truckId) {
+      Truck truck = findTruckById(truckId);
+      if(truck.getState() == State.BASE){
+          if(truck.getDriver() != null){
+              truck.setState(State.REPAIR);
+              System.out.println("Truck successfully on repair!!!");
+          }
+      }
+      else if (truck.getState() == State.REPAIR){
+          System.out.println("Truck already on the repair");
+      }
+      else if (truck.getState() == State.ROUTE){
+          if(truck.getDriver() != null){
+              truck.setState(State.REPAIR);
+              System.out.println("The truck "+ truck.getTruckName() + " is successfully on the road ");
+          }else {
+              System.out.println("The truck is without the driver");
+          }
+      } {
 
+      }
     }
 
     @Override
@@ -127,10 +130,11 @@ public class ServiceImpl implements Service {
         System.out.println("Enter the truck id");
         int id = scannerN.nextInt();
         Truck truck = findTruckById(id);
-        System.out.println("Which state do you wanna give, choose one of them:\n" +
-                "1) Base" +
-                "2) Route\n" +
-                "3)Repair\n");
+        System.out.println("""
+                Which state do you wanna give, choose one of them:
+                1) Base2) Route
+                3)Repair
+                """);
         int state = scannerN.nextInt();
         if (state == 1) {
             if (truck.getState() != State.BASE)

@@ -1,9 +1,6 @@
 package com.company;
 
-import com.company.entities.Driver;
-import com.company.entities.State;
 import com.company.entities.Truck;
-import com.company.service.Service;
 import com.company.service.ServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,46 +24,35 @@ public class Main {
         ServiceImpl service = new ServiceImpl();
         while (true) {
             System.out.println(" id  |  TruckName   |    State    | Driver    ");
-            service.getTruckList().stream().forEach(System.out::println);
+            service.getTrucks().forEach(System.out::println);
+            System.out.println("Enter the id of truck:");
+            int id = scannerN.nextInt();
+            service.findTruckById(id);
+            System.out.println(" id  |  TruckName   |    State    | Driver   \n" +
+                    service.getTrucks().stream().filter(x -> x.getId() == id).map(Truck::toString).findFirst().get());
+//            service.getDrivers().forEach(System.out::println);
+            System.out.println();
             buttons();
-            System.out.println("Choose the button:");
             String word = scannerW.nextLine();
             switch (word) {
-                case "0" -> {
-                    System.out.println("Enter the id of truck");
-                    service.startDriving(scannerN.nextInt());
-                }
                 case "1" -> {
                     System.out.println("Type the id of truck");
-                    service.changeDriver(scannerN.nextInt());
+                    service.changeDriver(id);
                 }
-                case "2" -> {
-                    service.changeTruckState();
-                }
-                case "3" -> {
-                    service.findTruckById(scannerN.nextInt()).setState(State.REPAIR);
-                }
-                case "4" -> {
-
-                    service.changeTruckState();
-                }
-                case "5" -> {
-                    for (Driver driver : service.getDriverList()) {
-                        System.out.println(driver.toString());
-                    }
-                }
+                case "2" -> service.startDriving(scannerN.nextInt());
+                case "3" -> service.startRepair(scannerN.nextInt());
             }
         }
     }
 
     public static void buttons() {
         System.out.println(
-                "Press 0 to startDriving\n" +
-                "Press 1 to change Driver\n" +
-                "Press 2 to send to the Route\n" +
-                "Press 3 to send to the Repairing\n" +
-                "Press 4 to send to the Repairing\n" +
-                "Press 5 to see all drivers");
+                """
+                        Press 1 to change Driver
+                        Press 2 to send to the Route
+                        Press 3 to send to the Repairing
+                        """
+        );
 
     }
 
