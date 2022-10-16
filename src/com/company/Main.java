@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
 public class Main {
     public static final Scanner scannerW = new Scanner(System.in);
@@ -25,22 +26,31 @@ public class Main {
         while (true) {
             System.out.println(" id  |  TruckName   |    State    | Driver    ");
             service.getTrucks().forEach(System.out::println);
+            System.out.println("-----------------------------------------------");
+            System.out.println("id   | name         | truckName");
+            service.getDrivers().forEach(System.out::println);
             System.out.println("Enter the id of truck:");
             int id = scannerN.nextInt();
-            service.findTruckById(id);
-            System.out.println(" id  |  TruckName   |    State    | Driver   \n" +
-                    service.getTrucks().stream().filter(x -> x.getId() == id).map(Truck::toString).findFirst().get());
-//            service.getDrivers().forEach(System.out::println);
+            try {
+                System.out.println(" id  |  TruckName   |    State    | Driver   \n" +
+                        service.getTrucks().stream().filter(x -> x.getId() == id).map(Truck::toString).findFirst().get());
+            } catch (NoSuchElementException e) {
+                System.out.println("We didn't find the truck, try again");
+            }
+
             System.out.println();
             buttons();
-            String word = scannerW.nextLine();
-            switch (word) {
+            switch (scannerW.nextLine()) {
                 case "1" -> {
-                    System.out.println("Type the id of truck");
-                    service.changeDriver(id);
+                    try {
+                        System.out.println("Type the id of truck");
+                        service.changeDriver(id);
+                    } catch (NoSuchElementException e) {
+                        System.out.println("All drivers are busy");
+                    }
                 }
-                case "2" -> service.startDriving(scannerN.nextInt());
-                case "3" -> service.startRepair(scannerN.nextInt());
+                case "2" -> service.startDriving(id);
+                case "3" -> service.startRepair(id);
             }
         }
     }
@@ -51,7 +61,7 @@ public class Main {
                         Press 1 to change Driver
                         Press 2 to send to the Route
                         Press 3 to send to the Repairing
-                        """
+                         """
         );
 
     }
