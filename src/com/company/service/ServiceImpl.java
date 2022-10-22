@@ -35,8 +35,7 @@ public class ServiceImpl implements Service {
     }
 
     public Driver findDriver() {
-        Driver driverFree = getDrivers().stream().filter(x -> x.getTruckName().equals("")).findFirst().orElseThrow();
-        return driverFree;
+        return getDrivers().stream().filter(x -> x.getTruckName().equals("")).findFirst().orElseThrow();
     }
 
 
@@ -48,12 +47,13 @@ public class ServiceImpl implements Service {
             if (Optional.ofNullable(driver).isPresent()) {
                 driver.setTruckName(truck.getTruckName());
                 if (!truck.getDriver().equals(" ")) {
-                    String oldDriversName = truck.getDriver();
-                    getDrivers().stream().filter(x -> x.getName().equals(oldDriversName)).findFirst();
+                    String oldDriverName = truck.getDriver();
+                    Driver driver1 = getDrivers().stream().filter(x -> x.getName().equals(oldDriverName)).findFirst().get();
+                    driver1.setTruckName("");
                     truck.setDriver(driver.getName());
                 }
                 truck.setDriver(driver.getName());
-                System.out.println(truck.getTruckName() + "'s now truck drives " + driver.getName());
+                System.out.println(truck.getTruckName() + "'s truck now drives " + driver.getName());
             } else if (truck.getState() == State.REPAIR) {
                 System.out.println("We can't change driver,because driver on Repair!!!");
             }
@@ -62,6 +62,7 @@ public class ServiceImpl implements Service {
         }
     }
 
+    @SuppressWarnings("DuplicateCondition")
     @Override
     public void startDriving(int truckId) {
         Random random = new Random();
@@ -94,16 +95,16 @@ public class ServiceImpl implements Service {
     public void startRepair(int truckId) {
         Truck truck = findTruckById(truckId);
         if (truck.getState() == State.BASE) {
-            if (truck.getDriver() != null) {
-                truck.setState(State.REPAIR);
-                System.out.println("Truck successfully on repair!!!");
-            }
+//            if (!truck.getDriver().equals(" ")) {
+            truck.setState(State.REPAIR);
+            System.out.println("Truck successfully on repair!!!");
+//            }
         } else if (truck.getState() == State.REPAIR) {
             System.out.println("Truck already on the repair");
         } else if (truck.getState() == State.ROUTE) {
-            if (truck.getDriver().equals(" ")) {
+            if (!truck.getDriver().equals(" ")) {
                 truck.setState(State.REPAIR);
-                System.out.println("The truck " + truck.getTruckName() + " is successfully on the road ");
+                System.out.println("The truck " + truck.getTruckName() + " is successfully on the repair ");
             } else {
                 System.out.println("The truck is without the driver");
             }

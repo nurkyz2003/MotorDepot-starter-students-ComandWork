@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 public class Main {
     public static final Scanner scannerW = new Scanner(System.in);
@@ -21,7 +20,8 @@ public class Main {
     public static final Path WRITE_PATH = Paths.get("./truck.json");
     public static final Path WRITE_PATH1 = Paths.get("./driver.json");
 
-    public static void main(String[] args) throws Exception {
+    @SuppressWarnings({"InfiniteLoopStatement", "OptionalGetWithoutIsPresent"})
+    public static void main(String[] args) {
         ServiceImpl service = new ServiceImpl();
         while (true) {
             System.out.println(" id  |  TruckName   |    State    | Driver    ");
@@ -65,7 +65,6 @@ public class Main {
         );
 
     }
-
 
     public static String readTruck() {
         return getString(WRITE_PATH);
